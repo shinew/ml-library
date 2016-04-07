@@ -14,15 +14,14 @@
 
 # Points to the root of Google Test, relative to where this file is.
 # Remember to tweak this if you move this file.
-GTEST_DIR = /Users/shine/dev/googletest/googletest
-
-# Where to find user code.
-USER_DIR = .
+GTEST_DIR = $(HOME)/dev/googletest/googletest
 
 # Flags passed to the preprocessor.
 # Set Google Test's header directory as a system directory, such that
 # the compiler doesn't generate warnings in Google Test headers.
-PROGRAM_INCLUDE_DIRS := /usr/local/include /usr/local/lib $(GTEST_DIR)/include
+PROGRAM_INCLUDE_DIRS := /usr/local/include \
+											  /usr/local/lib \
+												$(GTEST_DIR)/include
 CPPFLAGS += $(foreach includedir,$(PROGRAM_INCLUDE_DIRS),-isystem $(includedir))
 
 # Flags passed to the C++ compiler.
@@ -72,20 +71,20 @@ gtest_main.a : gtest-all.o gtest_main.o
 # gtest_main.a, depending on whether it defines its own main()
 # function.
 
-sanity.o : $(USER_DIR)/sanity.cc $(USER_DIR)/sanity.h $(GTEST_HEADERS)
-	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -c $(USER_DIR)/sanity.cc
+sanity.o : sanity.cc sanity.h
+	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -c sanity.cc
 
-sanity_test.o : $(USER_DIR)/sanity_test.cc $(USER_DIR)/sanity.h $(GTEST_HEADERS)
-	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -c $(USER_DIR)/sanity_test.cc
+sanity_test.o : sanity_test.cc sanity.h $(GTEST_HEADERS)
+	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -c sanity_test.cc
 
 sanity_test : sanity.o sanity_test.o gtest_main.a
 	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -lpthread $^ -o $@
 
-sanity2.o : $(USER_DIR)/sanity2.cc $(USER_DIR)/sanity2.h $(GTEST_HEADERS)
-	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -c $(USER_DIR)/sanity2.cc
+sanity2.o : sanity2.cc sanity2.h
+	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -c sanity2.cc
 
-sanity2_test.o : $(USER_DIR)/sanity2_test.cc $(USER_DIR)/sanity2.h $(GTEST_HEADERS)
-	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -c $(USER_DIR)/sanity2_test.cc
+sanity2_test.o : sanity2_test.cc sanity2.h $(GTEST_HEADERS)
+	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -c sanity2_test.cc
 
 sanity2_test : sanity.o sanity2.o sanity2_test.o gtest_main.a
 	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -lpthread $^ -o $@
