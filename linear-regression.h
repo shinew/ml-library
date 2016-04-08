@@ -49,11 +49,11 @@ void LinearRegression::fit(const Ref<const Matrix> &x,
   _theta = Vector::Random(x.cols());
   double previous_error;
   double current_error = linear_regression_error(x, y, _theta, _bias);
-  auto x_transpose = x.transpose();
+  const auto x_transpose = x.transpose();
   do {
     previous_error = current_error;
-    auto h = hypothesis(x, _theta, _bias);
-    auto diff = x_transpose * (h - y);
+    const auto h = hypothesis(x, _theta, _bias);
+    const auto diff = x_transpose * (h - y);
     _theta -= _alpha * diff;
     current_error = linear_regression_error(x, y, _theta, _bias);
   } while (!about_equal(previous_error, current_error));
