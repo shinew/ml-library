@@ -16,9 +16,9 @@
 
 # the compiler doesn't generate warnings in Google Test headers.
 PROGRAM_INCLUDE_DIRS := lib \
-											  /usr/local/include \
-											  /usr/local/lib \
-												$(GTEST_DIR)/include
+                        /usr/local/include \
+                        /usr/local/lib \
+                        $(GTEST_DIR)/include
 
 CPPFLAGS += $(foreach includedir,$(PROGRAM_INCLUDE_DIRS),-isystem $(includedir))
 
