@@ -18,10 +18,10 @@ TEST(LinearRegressionError, Basic) {
 }
 
 TEST(LinearRegression, Basic) {
-  Eigen::Matrix2d x;
-  Eigen::Vector2d y;
-  x << 1, 1, 1, 2;
-  y << 1, 2;
+  Eigen::MatrixXd x (3, 2);
+  Eigen::VectorXd y (3);
+  x << 1, 1, 1, 2, 1, 3;
+  y << 1, 2, 3;
 
   auto lr = LinearRegression(0.1);
   lr.fit(x, y);

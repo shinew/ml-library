@@ -3,11 +3,15 @@
 #include <vector>
 
 #include "linear-regression.h"
-#include "utils.h"
 
 int main() {
-  Eigen::VectorXd a(3);
-  a << 1, 1, 2;
-  std::cout << ml::mean_squared_error(a, a) << '\n';
+  Eigen::MatrixXd x (3, 2);
+  Eigen::VectorXd y (3);
+  x << 1, 1, 1, 2, 1, 3;
+  y << 1, 2, 3;
+
+  auto lr = ml::LinearRegression(0.1);
+  lr.fit(x, y);
+
   return 0;
 }

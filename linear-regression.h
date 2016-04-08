@@ -13,7 +13,7 @@ namespace {
 
 Vector hypothesis(const Ref<const Matrix> &x, const Ref<const Vector> &theta,
                   double bias) {
-  return x * theta + Vector::Ones(theta.rows()) * bias;
+  return x * theta + Vector::Ones(x.rows()) * bias;
 }
 
 double linear_regression_error(const Ref<const Matrix> &x,
@@ -46,13 +46,14 @@ void LinearRegression::fit(const Ref<const Matrix> &x,
                            const Ref<const Vector> &y) {
   _is_fitted = true;
 
-  _theta = Vector::Random(x.rows());
+  _theta = Vector::Random(x.cols());
   double previous_error;
   double current_error = linear_regression_error(x, y, _theta, _bias);
+  auto x_transpose = x.transpose();
   do {
     previous_error = current_error;
     auto h = hypothesis(x, _theta, _bias);
-    auto diff = x.transpose() * (h - y);
+    auto diff = x_transpose * (h - y);
     _theta -= _alpha * diff;
     current_error = linear_regression_error(x, y, _theta, _bias);
   } while (!about_equal(previous_error, current_error));
