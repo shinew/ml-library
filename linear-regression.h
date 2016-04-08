@@ -11,16 +11,14 @@ namespace ml {
 
 namespace {
 
-Eigen::VectorXd hypothesis(const Eigen::Ref<const Eigen::MatrixXd> &x,
-                           const Eigen::Ref<const Eigen::VectorXd> &theta,
-                           double bias) {
-  return x * theta + Eigen::VectorXd::Ones(theta.rows()) * bias;
+Vector hypothesis(const Ref<const Matrix> &x, const Ref<const Vector> &theta,
+                  double bias) {
+  return x * theta + Vector::Ones(theta.rows()) * bias;
 }
 
-double linear_regression_error(const Eigen::Ref<const Eigen::MatrixXd> &x,
-                               const Eigen::Ref<const Eigen::VectorXd> &y,
-                               const Eigen::Ref<const Eigen::VectorXd> &theta,
-                               double bias) {
+double linear_regression_error(const Ref<const Matrix> &x,
+                               const Ref<const Vector> &y,
+                               const Ref<const Vector> &theta, double bias) {
   return mean_squared_error(hypothesis(x, theta, bias), y);
 }
 
@@ -28,29 +26,27 @@ class LinearRegression : Regressor {
 public:
   LinearRegression(double alpha);
 
-  void fit(const Eigen::Ref<const Eigen::MatrixXd> &x,
-           const Eigen::Ref<const Eigen::VectorXd> &y) override;
+  void fit(const Ref<const Matrix> &x, const Ref<const Vector> &y) override;
 
-  Eigen::VectorXd
-  predict(const Eigen::Ref<const Eigen::MatrixXd> &x) const override;
+  Vector predict(const Ref<const Matrix> &x) const override;
 
-  const Eigen::Ref<const Eigen::VectorXd> coefficients() const;
+  const Ref<const Vector> coefficients() const;
 
 private:
   bool _is_fitted;
   const double _alpha;
-  Eigen::VectorXd _theta;
+  Vector _theta;
   double _bias;
 };
 
 LinearRegression::LinearRegression(double alpha)
     : _is_fitted(false), _alpha(alpha) {}
 
-void LinearRegression::fit(const Eigen::Ref<const Eigen::MatrixXd> &x,
-                           const Eigen::Ref<const Eigen::VectorXd> &y) {
+void LinearRegression::fit(const Ref<const Matrix> &x,
+                           const Ref<const Vector> &y) {
   _is_fitted = true;
 
-  _theta = Eigen::VectorXd::Random(x.rows());
+  _theta = Vector::Random(x.rows());
   double previous_error;
   double current_error = linear_regression_error(x, y, _theta, _bias);
   do {
@@ -62,13 +58,12 @@ void LinearRegression::fit(const Eigen::Ref<const Eigen::MatrixXd> &x,
   } while (!about_equal(previous_error, current_error));
 }
 
-Eigen::VectorXd
-LinearRegression::predict(const Eigen::Ref<const Eigen::MatrixXd> &x) const {
+Vector LinearRegression::predict(const Ref<const Matrix> &x) const {
   assert(_is_fitted);
   return x * _theta;
 }
 
-const Eigen::Ref<const Eigen::VectorXd> LinearRegression::coefficients() const {
+const Ref<const Vector> LinearRegression::coefficients() const {
   assert(_is_fitted);
   return _theta;
 }

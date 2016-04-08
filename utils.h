@@ -6,8 +6,12 @@
 
 namespace ml {
 
-double mean_squared_error(const Eigen::Ref<const Eigen::VectorXd> &a,
-                          const Eigen::Ref<const Eigen::VectorXd> &b) {
+using Vector = Eigen::VectorXd;
+using Matrix = Eigen::MatrixXd;
+using Eigen::Ref;
+
+double mean_squared_error(const Ref<const Vector> &a,
+                          const Ref<const Vector> &b) {
   return (a - b).squaredNorm();
 }
 
