@@ -1,4 +1,7 @@
 *.swp
 *.o
 *.a
+*.gch
 *_test
+*.dSYM
+sample_program

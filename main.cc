@@ -1,11 +1,13 @@
+#include <Eigen/Core>
 #include <iostream>
 #include <vector>
 
+#include "linear-regression.h"
 #include "utils.h"
 
 int main() {
-  std::vector<int> a = {1, 2, 3};
-  std::vector<int> b = {0, 0, 0};
-  std::cout << ml::mean_squared_error(a.begin(), a.end(), b.begin()) << '\n';
+  Eigen::VectorXd a(3);
+  a << 1, 1, 2;
+  std::cout << ml::mean_squared_error(a, a) << '\n';
   return 0;
 }

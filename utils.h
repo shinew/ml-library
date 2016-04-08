@@ -1,20 +1,18 @@
 #ifndef UTILS_H_
 #define UTILS_H_
 
-#include <iterator>
+#include <Eigen/Core>
+#include <cmath>
 
 namespace ml {
 
-template <typename It> using T = typename std::iterator_traits<It>::value_type;
-template <typename It>
-T<It> mean_squared_error(It first1, It last1, It first2) {
-  T<It> sum{};
-  T<It> diff;
-  for (; first1 != last1; ++first1, ++first2) {
-    diff = *first1 - *first2;
-    sum += diff * diff;
-  }
-  return sum;
+double mean_squared_error(const Eigen::Ref<const Eigen::VectorXd> &a,
+                          const Eigen::Ref<const Eigen::VectorXd> &b) {
+  return (a - b).squaredNorm();
+}
+
+bool about_equal(double a, double b, double tol = 1e-50) {
+  return fabs(a - b) < tol;
 }
 }
 

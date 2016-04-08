@@ -27,7 +27,7 @@ CXXFLAGS += -g -Wall -Wextra -pthread -std=c++11
 
 # All tests produced by this Makefile.  Remember to add new tests you
 # created to the list.
-TESTS = utils_test
+TESTS = utils_test linear-regression_test
 
 EXECUTABLE = sample_program
 
@@ -42,7 +42,7 @@ all : $(EXECUTABLE) $(TESTS)
 
 clean :
 	rm -f $(TESTS) gtest.a gtest_main.a *.o
-	rm -rf $(EXECUTABLE) $(EXECUTABLE).dSYM
+	rm -rf $(EXECUTABLE) $(EXECUTABLE).dSYM *.gch
 
 # Builds gtest.a and gtest_main.a.
 
@@ -72,14 +72,17 @@ gtest_main.a : gtest-all.o gtest_main.o
 # gtest_main.a, depending on whether it defines its own main()
 # function.
 
-utils.o : utils.cc utils.h
-	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -c utils.cc
-
 utils_test.o : utils_test.cc utils.h $(GTEST_HEADERS)
 	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -c utils_test.cc
 
-utils_test : utils.o utils_test.o gtest_main.a
+utils_test : utils_test.o gtest_main.a
 	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -lpthread $^ -o $@
 
-$(EXECUTABLE): main.cc utils.o
+linear-regression_test.o : linear-regression_test.cc linear-regression.h $(GTEST_HEADERS)
+	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -c linear-regression_test.cc
+
+linear-regression_test : linear-regression_test.o gtest_main.a
+	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -lpthread $^ -o $@
+
+$(EXECUTABLE): main.cc
 	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -lpthread $^ -o $@
