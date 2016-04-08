@@ -12,24 +12,24 @@
 # project, except GTEST_HEADERS, which you can use in your own targets
 # but shouldn't modify.
 
-# Points to the root of Google Test, relative to where this file is.
-# Remember to tweak this if you move this file.
-GTEST_DIR = $(HOME)/dev/googletest/googletest
-
 # Flags passed to the preprocessor.
-# Set Google Test's header directory as a system directory, such that
+
 # the compiler doesn't generate warnings in Google Test headers.
-PROGRAM_INCLUDE_DIRS := /usr/local/include \
+PROGRAM_INCLUDE_DIRS := lib \
+											  /usr/local/include \
 											  /usr/local/lib \
 												$(GTEST_DIR)/include
+
 CPPFLAGS += $(foreach includedir,$(PROGRAM_INCLUDE_DIRS),-isystem $(includedir))
 
 # Flags passed to the C++ compiler.
-CXXFLAGS += -g -Wall -Wextra -pthread
+CXXFLAGS += -g -Wall -Wextra -pthread -std=c++11
 
 # All tests produced by this Makefile.  Remember to add new tests you
 # created to the list.
-TESTS = sanity_test sanity2_test
+TESTS = utils_test
+
+EXECUTABLE = sample_program
 
 # All Google Test headers.  Usually you shouldn't change this
 # definition.
@@ -38,10 +38,11 @@ GTEST_HEADERS = $(GTEST_DIR)/include/gtest/*.h \
 
 # House-keeping build targets.
 
-all : $(TESTS)
+all : $(EXECUTABLE) $(TESTS)
 
 clean :
 	rm -f $(TESTS) gtest.a gtest_main.a *.o
+	rm -rf $(EXECUTABLE) $(EXECUTABLE).dSYM
 
 # Builds gtest.a and gtest_main.a.
 
@@ -71,20 +72,14 @@ gtest_main.a : gtest-all.o gtest_main.o
 # gtest_main.a, depending on whether it defines its own main()
 # function.
 
-sanity.o : sanity.cc sanity.h
-	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -c sanity.cc
+utils.o : utils.cc utils.h
+	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -c utils.cc
 
-sanity_test.o : sanity_test.cc sanity.h $(GTEST_HEADERS)
-	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -c sanity_test.cc
+utils_test.o : utils_test.cc utils.h $(GTEST_HEADERS)
+	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -c utils_test.cc
 
-sanity_test : sanity.o sanity_test.o gtest_main.a
+utils_test : utils.o utils_test.o gtest_main.a
 	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -lpthread $^ -o $@
 
-sanity2.o : sanity2.cc sanity2.h
-	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -c sanity2.cc
-
-sanity2_test.o : sanity2_test.cc sanity2.h $(GTEST_HEADERS)
-	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -c sanity2_test.cc
-
-sanity2_test : sanity.o sanity2.o sanity2_test.o gtest_main.a
+$(EXECUTABLE): main.cc utils.o
 	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -lpthread $^ -o $@

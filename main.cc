@@ -1,8 +1,11 @@
 #include <iostream>
+#include <vector>
 
-#include "sanity2.h"
+#include "utils.h"
 
 int main() {
-  std::cout << g() << '\n';
+  std::vector<int> a = {1, 2, 3};
+  std::vector<int> b = {0, 0, 0};
+  std::cout << ml::mean_squared_error(a.begin(), a.end(), b.begin()) << '\n';
   return 0;
 }
