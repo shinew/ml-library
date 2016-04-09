@@ -1,16 +1,15 @@
 #ifndef REGRESSOR_H_
 #define REGRESSOR_H_
 
+#include "utils.h"
 #include <Eigen/Core>
 
 namespace ml {
 
 class Regressor {
 public:
-  virtual void fit(const Eigen::Ref<const Eigen::MatrixXd> &x,
-                   const Eigen::Ref<const Eigen::VectorXd> &y) = 0;
-  virtual Eigen::VectorXd
-  predict(const Eigen::Ref<const Eigen::MatrixXd> &x) const = 0;
+  virtual void fit(const Ref<Matrix> &X, const Ref<const Vector> &y) = 0;
+  virtual Vector predict(const Ref<const Matrix> &X) const = 0;
 };
 }
 
