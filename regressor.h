@@ -8,7 +8,7 @@ namespace ml {
 
 class Regressor {
 public:
-  virtual void fit(const Ref<Matrix> &X, const Ref<const Vector> &y) = 0;
+  virtual void fit(const Ref<const Matrix> &X, const Ref<const Vector> &y) = 0;
   virtual Vector predict(const Ref<const Matrix> &X) const = 0;
 };
 }
