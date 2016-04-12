@@ -23,11 +23,11 @@ PROGRAM_INCLUDE_DIRS := lib \
 CPPFLAGS += $(foreach includedir,$(PROGRAM_INCLUDE_DIRS),-isystem $(includedir))
 
 # Flags passed to the C++ compiler.
-CXXFLAGS += -g -Wall -Wextra -pthread -std=c++11
+CXXFLAGS += -g -Wall -Wextra -pthread -std=c++14
 
 # All tests produced by this Makefile.  Remember to add new tests you
 # created to the list.
-TESTS = utils_test linear-regression_test
+TESTS = utils_test linear-model_test
 
 EXECUTABLE = sample_program
 
@@ -72,17 +72,26 @@ gtest_main.a : gtest-all.o gtest_main.o
 # gtest_main.a, depending on whether it defines its own main()
 # function.
 
+utils.o : utils.cc utils.h
+	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -c utils.cc
+
 utils_test.o : utils_test.cc utils.h $(GTEST_HEADERS)
 	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -c utils_test.cc
 
-utils_test : utils_test.o gtest_main.a
+utils_test : utils_test.o gtest_main.a utils.o
 	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -lpthread $^ -o $@
 
-linear-regression_test.o : linear-regression_test.cc linear-regression.h $(GTEST_HEADERS)
-	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -c linear-regression_test.cc
+linear-model.o : linear-model.cc linear-model.h
+	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -c linear-model.cc
 
-linear-regression_test : linear-regression_test.o gtest_main.a
+linear-model_test.o : linear-model_test.cc linear-model.h $(GTEST_HEADERS)
+	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -c linear-model_test.cc
+
+linear-model_test : linear-model_test.o gtest_main.a linear-model.o utils.o
 	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -lpthread $^ -o $@
 
-$(EXECUTABLE): main.cc
+main.o : main.cc
+	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -c main.cc
+
+$(EXECUTABLE) : main.o linear-model.o utils.o
 	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -lpthread $^ -o $@

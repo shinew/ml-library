@@ -1,19 +1,14 @@
-#ifndef LINEAR_REGRESSION_H
-#define LINEAR_REGRESSION_H
+#include "linear-model.h"
 
-#include <Eigen/Core>
 #include <cassert>
 
-#include "regressor.h"
-#include "utils.h"
-
 namespace ml {
-
 namespace {
 
 Vector hypothesis(const Ref<const Matrix> &X, const Ref<const Vector> &theta,
                   double bias) {
   return X * theta + Vector::Ones(X.rows()) * bias;
+}
 }
 
 double linear_regression_error(const Ref<const Matrix> &X,
@@ -21,23 +16,6 @@ double linear_regression_error(const Ref<const Matrix> &X,
                                const Ref<const Vector> &theta, double bias) {
   return mean_squared_error(hypothesis(X, theta, bias), y);
 }
-
-class LinearRegression : Regressor {
-public:
-  LinearRegression(double alpha);
-
-  void fit(const Ref<const Matrix> &X, const Ref<const Vector> &y) override;
-
-  Vector predict(const Ref<const Matrix> &X) const override;
-
-  const Ref<const Vector> coefficients() const;
-
-private:
-  bool _is_fitted;
-  const double _alpha;
-  Vector _theta;
-  double _bias;
-};
 
 LinearRegression::LinearRegression(double alpha)
     : _is_fitted(false), _alpha(alpha) {}
@@ -68,7 +46,19 @@ const Ref<const Vector> LinearRegression::coefficients() const {
   assert(_is_fitted);
   return _theta;
 }
-}
+
+LogisticRegression::LogisticRegression(double alpha)
+    : LinearRegression(alpha) {}
+
+Vector LogisticRegression::predict(const Ref<const Matrix> &X) const {
+  Vector y_predict = LinearRegression::predict(X);
+  for (Eigen::DenseIndex i = 0; i < y_predict.size(); ++i) {
+    y_predict(i) = sigmoid(y_predict(i));
+  }
+  return y_predict;
 }
 
-#endif
+const Ref<const Vector> LogisticRegression::coefficients() const {
+  return _theta;
+}
+}

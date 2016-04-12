@@ -1,12 +1,11 @@
-#include <Eigen/Core>
 #include <iostream>
 #include <vector>
 
-#include "linear-regression.h"
+#include "linear-model.h"
 
 int main() {
-  Eigen::MatrixXd x (3, 2);
-  Eigen::VectorXd y (3);
+  ml::Matrix x(3, 2);
+  ml::Vector y(3);
   x << 1, 1, 1, 2, 1, 3;
   y << 1, 2, 3;
 
