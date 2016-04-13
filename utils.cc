@@ -1,6 +1,7 @@
 #include "utils.h"
 
 #include <cmath>
+#include <utility>
 
 namespace ml {
 
@@ -14,9 +15,6 @@ bool about_equal(double a, double b, double tol) { return fabs(a - b) < tol; }
 double sigmoid(double x) { return 1.0 / (1.0 + std::exp(-x)); }
 
 Vector sigmoid(Vector x) {
-  for (Eigen::DenseIndex i = 0; i < x.size(); ++i) {
-    x(i) = sigmoid(x(i));
-  }
-  return x;
+  return x.unaryExpr([](double x) { return sigmoid(x); });
 }
 }

@@ -6,7 +6,9 @@
 namespace ml {
 
 using Vector = Eigen::VectorXd;
+using IVector = Eigen::VectorXi;
 using Matrix = Eigen::MatrixXd;
+using IMatrix = Eigen::MatrixXi;
 using Eigen::Ref;
 
 double mean_squared_error(const Ref<const Vector> &a,

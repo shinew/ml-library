@@ -32,7 +32,7 @@ minimize_mean_squared_error(const Ref<const Matrix> &X,
     const auto diff = X_transpose * (h - y);
     theta -= alpha * diff;
     current_error = mean_squared_error(hypothesis(X, theta, bias), y);
-  } while (!about_equal(previous_error, current_error));
+  } while (!about_equal(previous_error, current_error)); // convergence
   return std::make_tuple(theta, bias);
 }
 }
@@ -63,10 +63,11 @@ LogisticRegression::LogisticRegression(double alpha)
     : _is_fitted(false), _alpha(alpha) {}
 
 void LogisticRegression::fit(const Ref<const Matrix> &X,
-                             const Ref<const Vector> &y) {
+                             const Ref<const IVector> &y) {
   _is_fitted = true;
 
-  auto result = minimize_mean_squared_error(X, y, _alpha, logistic_hypothesis);
+  auto result = minimize_mean_squared_error(X, y.cast<double>(), _alpha,
+                                            logistic_hypothesis);
   _theta = std::get<0>(result);
   _bias = std::get<1>(result);
 }
