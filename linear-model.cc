@@ -6,14 +6,9 @@
 namespace ml {
 namespace {
 
-Vector linear_hypothesis(const Ref<const Matrix> &X,
-                         const Ref<const Vector> &theta, double bias) {
+Vector hypothesis(const Ref<const Matrix> &X, const Ref<const Vector> &theta,
+                  double bias) {
   return X * theta + Vector::Ones(X.rows()) * bias;
-}
-
-Vector logistic_hypothesis(const Ref<const Matrix> &X,
-                           const Ref<const Vector> &theta, double bias) {
-  return sigmoid(linear_hypothesis(X, theta, bias));
 }
 
 std::tuple<Vector, double>
@@ -22,15 +17,14 @@ minimize_mean_squared_error(const Ref<const Matrix> &X,
   Vector theta = Vector::Random(X.cols());
   double bias = 0.0;
   double previous_error;
-  double current_error =
-      mean_squared_error(linear_hypothesis(X, theta, bias), y);
+  double current_error = mean_squared_error(hypothesis(X, theta, bias), y);
   const auto X_transpose = X.transpose();
   do {
     previous_error = current_error;
-    const auto h = linear_hypothesis(X, theta, bias);
+    const auto h = hypothesis(X, theta, bias);
     const auto diff = X_transpose * (h - y);
     theta -= alpha * diff;
-    current_error = mean_squared_error(linear_hypothesis(X, theta, bias), y);
+    current_error = mean_squared_error(hypothesis(X, theta, bias), y);
   } while (!about_equal(previous_error, current_error));
   return std::make_tuple(theta, bias);
 }
@@ -50,7 +44,7 @@ void LinearRegression::fit(const Ref<const Matrix> &X,
 
 Vector LinearRegression::predict(const Ref<const Matrix> &X) const {
   assert(_is_fitted);
-  return linear_hypothesis(X, _theta, _bias);
+  return hypothesis(X, _theta, _bias);
 }
 
 const Ref<const Vector> LinearRegression::coefficients() const {
@@ -72,7 +66,7 @@ void LogisticRegression::fit(const Ref<const Matrix> &X,
 
 Vector LogisticRegression::predict(const Ref<const Matrix> &X) const {
   assert(_is_fitted);
-  return logistic_hypothesis(X, _theta, _bias);
+  return sigmoid(hypothesis(X, _theta, _bias));
 }
 
 const Ref<const Vector> LogisticRegression::coefficients() const {
