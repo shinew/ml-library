@@ -15,6 +15,8 @@ double mean_squared_error(const Ref<const Vector> &a,
 bool about_equal(double a, double b, double tol = 1e-20);
 
 double sigmoid(double x);
+
+Vector sigmoid(Vector x);
 }
 
 #endif

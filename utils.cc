@@ -12,4 +12,11 @@ double mean_squared_error(const Ref<const Vector> &a,
 bool about_equal(double a, double b, double tol) { return fabs(a - b) < tol; }
 
 double sigmoid(double x) { return 1.0 / (1.0 + std::exp(-x)); }
+
+Vector sigmoid(Vector x) {
+  for (Eigen::DenseIndex i = 0; i < x.size(); ++i) {
+    x(i) = sigmoid(x(i));
+  }
+  return x;
+}
 }

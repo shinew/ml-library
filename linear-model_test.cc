@@ -5,17 +5,6 @@
 
 namespace ml {
 
-TEST(LinearRegressionError, Basic) {
-  Eigen::Matrix3d X;
-  Eigen::Vector3d y;
-  Eigen::Vector3d theta;
-  double bias = 1;
-  X << 1, 1, 1, 1, 1, 1, 1, 1, 1;
-  y << 1, 1, 1;
-  theta << 1, 1, 1;
-  EXPECT_DOUBLE_EQ(27.0, linear_regression_error(X, y, theta, bias));
-}
-
 TEST(LinearRegression, Basic) {
   Eigen::MatrixXd X(3, 2);
   Eigen::VectorXd y(3);

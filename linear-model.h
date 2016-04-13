@@ -6,10 +6,6 @@
 
 namespace ml {
 
-double linear_regression_error(const Ref<const Matrix> &X,
-                               const Ref<const Vector> &y,
-                               const Ref<const Vector> &theta, double bias);
-
 class LinearRegression : public Model {
 public:
   LinearRegression(double alpha);
@@ -20,22 +16,28 @@ public:
 
   const Ref<const Vector> coefficients() const;
 
-protected:
-  Vector _theta;
-
 private:
   bool _is_fitted;
   const double _alpha;
+  Vector _theta;
   double _bias;
 };
 
-class LogisticRegression : public LinearRegression {
+class LogisticRegression : public Model {
 public:
   LogisticRegression(double alpha);
+
+  void fit(const Ref<const Matrix> &X, const Ref<const Vector> &y) override;
 
   Vector predict(const Ref<const Matrix> &X) const override;
 
   const Ref<const Vector> coefficients() const;
+
+private:
+  bool _is_fitted;
+  const double _alpha;
+  Vector _theta;
+  double _bias;
 };
 }
 
