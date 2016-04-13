@@ -6,14 +6,21 @@
 namespace ml {
 namespace {
 
-Vector hypothesis(const Ref<const Matrix> &X, const Ref<const Vector> &theta,
-                  double bias) {
+Vector linear_hypothesis(const Ref<const Matrix> &X,
+                         const Ref<const Vector> &theta, double bias) {
   return X * theta + Vector::Ones(X.rows()) * bias;
 }
 
+Vector logistic_hypothesis(const Ref<const Matrix> &X,
+                           const Ref<const Vector> &theta, double bias) {
+  return sigmoid(linear_hypothesis(X, theta, bias));
+}
+
+template <typename H>
 std::tuple<Vector, double>
 minimize_mean_squared_error(const Ref<const Matrix> &X,
-                            const Ref<const Vector> &y, const double alpha) {
+                            const Ref<const Vector> &y, const double alpha,
+                            const H &hypothesis) {
   Vector theta = Vector::Random(X.cols());
   double bias = 0.0;
   double previous_error;
@@ -37,14 +44,14 @@ void LinearRegression::fit(const Ref<const Matrix> &X,
                            const Ref<const Vector> &y) {
   _is_fitted = true;
 
-  auto result = minimize_mean_squared_error(X, y, _alpha);
+  auto result = minimize_mean_squared_error(X, y, _alpha, linear_hypothesis);
   _theta = std::get<0>(result);
   _bias = std::get<1>(result);
 }
 
 Vector LinearRegression::predict(const Ref<const Matrix> &X) const {
   assert(_is_fitted);
-  return hypothesis(X, _theta, _bias);
+  return linear_hypothesis(X, _theta, _bias);
 }
 
 const Ref<const Vector> LinearRegression::coefficients() const {
@@ -59,14 +66,14 @@ void LogisticRegression::fit(const Ref<const Matrix> &X,
                              const Ref<const Vector> &y) {
   _is_fitted = true;
 
-  auto result = minimize_mean_squared_error(X, y, _alpha);
+  auto result = minimize_mean_squared_error(X, y, _alpha, logistic_hypothesis);
   _theta = std::get<0>(result);
   _bias = std::get<1>(result);
 }
 
 Vector LogisticRegression::predict(const Ref<const Matrix> &X) const {
   assert(_is_fitted);
-  return sigmoid(hypothesis(X, _theta, _bias));
+  return logistic_hypothesis(X, _theta, _bias);
 }
 
 const Ref<const Vector> LogisticRegression::coefficients() const {
