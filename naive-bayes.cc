@@ -46,9 +46,10 @@ void MultinomialNaiveBayes::fit(const Ref<const IMatrix> &X,
   }
   // _theta_xy(i)(j) = # samples with class i and x_j > 1.
 
-  // normalize each (class, feature) -> probability
+  // normalize each (class, feature) -> conditional probability
   for (Index which_class = 0; which_class < num_classes; ++which_class) {
     for (Index feature = 0; feature < X.cols(); ++feature) {
+      // Laplace smoothening
       _theta_xy(which_class, feature) =
           (_theta_xy(which_class, feature) + _alpha) /
           (_theta_y(which_class) + _alpha * num_classes);
