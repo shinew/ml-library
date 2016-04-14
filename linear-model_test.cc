@@ -6,8 +6,8 @@
 namespace ml {
 
 TEST(LinearRegression, Basic) {
-  Eigen::MatrixXd X(3, 2);
-  Eigen::VectorXd y(3);
+  Matrix X(3, 2);
+  Vector y(3);
   X << 1, 1, 1, 2, 1, 3;
   y << 1, 2, 3;
 
@@ -18,8 +18,8 @@ TEST(LinearRegression, Basic) {
 }
 
 TEST(LogisticRegression, Basic) {
-  Eigen::MatrixXd X(4, 2);
-  Eigen::VectorXi y(4);
+  Matrix X(4, 2);
+  IVector y(4);
   X << 1, 1, 1, 2, 1, 3, 1, 4;
   y << 0, 0, 1, 1;
 

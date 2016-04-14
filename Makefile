@@ -27,7 +27,7 @@ CXXFLAGS += -g -Wall -Wextra -pthread -std=c++14
 
 # All tests produced by this Makefile.  Remember to add new tests you
 # created to the list.
-TESTS = utils_test linear-model_test
+TESTS = utils_test linear-model_test naive-bayes_test
 
 EXECUTABLE = sample_program
 
@@ -88,6 +88,15 @@ linear-model_test.o : linear-model_test.cc linear-model.h $(GTEST_HEADERS)
 	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -c linear-model_test.cc
 
 linear-model_test : linear-model_test.o gtest_main.a linear-model.o utils.o
+	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -lpthread $^ -o $@
+
+naive-bayes.o : naive-bayes.cc naive-bayes.h
+	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -c naive-bayes.cc
+
+naive-bayes_test.o : naive-bayes_test.cc naive-bayes.h $(GTEST_HEADERS)
+	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -c naive-bayes_test.cc
+
+naive-bayes_test : naive-bayes_test.o gtest_main.a naive-bayes.o utils.o
 	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -lpthread $^ -o $@
 
 main.o : main.cc

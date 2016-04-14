@@ -21,6 +21,8 @@ std::tuple<Vector, double>
 minimize_mean_squared_error(const Ref<const Matrix> &X,
                             const Ref<const Vector> &y, const double alpha,
                             const H &hypothesis) {
+  assert(X.rows() == y.rows());
+
   Vector theta = Vector::Random(X.cols());
   double bias = 0.0;
   double previous_error;
@@ -42,6 +44,7 @@ LinearRegression::LinearRegression(double alpha)
 
 void LinearRegression::fit(const Ref<const Matrix> &X,
                            const Ref<const Vector> &y) {
+  assert(X.rows() == y.rows());
   _is_fitted = true;
 
   auto result = minimize_mean_squared_error(X, y, _alpha, linear_hypothesis);
@@ -64,6 +67,7 @@ LogisticRegression::LogisticRegression(double alpha)
 
 void LogisticRegression::fit(const Ref<const Matrix> &X,
                              const Ref<const IVector> &y) {
+  assert(X.rows() == y.rows());
   _is_fitted = true;
 
   auto result = minimize_mean_squared_error(X, y.cast<double>(), _alpha,

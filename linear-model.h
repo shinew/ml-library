@@ -22,6 +22,7 @@ private:
   double _bias;
 };
 
+// Two-class logistic regression.
 class LogisticRegression {
 public:
   LogisticRegression(double alpha);

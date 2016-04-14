@@ -14,7 +14,14 @@ bool about_equal(double a, double b, double tol) { return fabs(a - b) < tol; }
 
 double sigmoid(double x) { return 1.0 / (1.0 + std::exp(-x)); }
 
-Vector sigmoid(Vector x) {
-  return x.unaryExpr([](double x) { return sigmoid(x); });
+Vector sigmoid(const Vector &x) {
+  return x.unaryExpr([](double v) { return sigmoid(v); });
+}
+
+Vector softmax(const Vector &x) {
+  Vector numerators = x.unaryExpr([](double v) { return std::exp(v); });
+  double denominator = numerators.sum();
+  numerators /= denominator;
+  return numerators;
 }
 }
