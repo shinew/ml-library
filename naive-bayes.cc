@@ -27,6 +27,7 @@ void MultinomialNaiveBayes::fit(const Ref<const IMatrix> &X,
 
   auto m = X.rows();
   const int num_classes = calculate_num_classes(y);
+  const int num_features = X.cols();
   assert(num_classes > 1);
 
   _theta_y = Vector::Zero(num_classes);
@@ -35,10 +36,10 @@ void MultinomialNaiveBayes::fit(const Ref<const IMatrix> &X,
   }
   // _theta_y(i) = # samples of class i.
 
-  _theta_xy = Matrix::Zero(num_classes, X.cols());
+  _theta_xy = Matrix::Zero(num_classes, num_features);
   for (Index i = 0; i < m; ++i) {
     const int which_class = y(i);
-    for (Index feature = 0; feature < X.cols(); ++feature) {
+    for (Index feature = 0; feature < num_features; ++feature) {
       if (X(i, feature) > 0) {
         _theta_xy(which_class, feature) += 1;
       }
@@ -48,11 +49,11 @@ void MultinomialNaiveBayes::fit(const Ref<const IMatrix> &X,
 
   // normalize each (class, feature) -> conditional probability
   for (Index which_class = 0; which_class < num_classes; ++which_class) {
-    for (Index feature = 0; feature < X.cols(); ++feature) {
+    for (Index feature = 0; feature < num_features; ++feature) {
       // Laplace smoothening
       _theta_xy(which_class, feature) =
           (_theta_xy(which_class, feature) + _alpha) /
-          (_theta_y(which_class) + _alpha * num_classes);
+          (_theta_y(which_class) + _alpha * num_features);
     }
   }
 
@@ -63,7 +64,8 @@ void MultinomialNaiveBayes::fit(const Ref<const IMatrix> &X,
 Matrix MultinomialNaiveBayes::predict(const Ref<const IMatrix> &X) const {
   assert(_is_fitted);
 
-  const int num_classes = _theta_y.size();
+  const int num_classes = _theta_y.rows();
+  const int num_features = _theta_xy.cols();
   Matrix output(X.rows(), num_classes);
 
   for (Index row = 0; row < X.rows(); ++row) {
@@ -71,7 +73,7 @@ Matrix MultinomialNaiveBayes::predict(const Ref<const IMatrix> &X) const {
 
     for (Index which_class = 0; which_class < num_classes; ++which_class) {
       double product = 1.0;
-      for (Index feature = 0; feature < _theta_xy.cols(); ++feature) {
+      for (Index feature = 0; feature < num_features; ++feature) {
         if (X(row, feature) > 0) {
           product *= _theta_xy(which_class, feature);
         } else {
@@ -83,7 +85,7 @@ Matrix MultinomialNaiveBayes::predict(const Ref<const IMatrix> &X) const {
 
     for (Index which_class = 0; which_class < num_classes; ++which_class) {
       double p_x_given_y = 1.0;
-      for (Index feature = 0; feature < _theta_xy.cols(); ++feature) {
+      for (Index feature = 0; feature < num_features; ++feature) {
         if (X(row, feature) > 0) {
           p_x_given_y *= _theta_xy(which_class, feature);
         } else {

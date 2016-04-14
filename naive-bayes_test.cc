@@ -8,8 +8,14 @@ namespace ml {
 TEST(MultinomialNaiveBayes, Basic) {
   IMatrix X(4, 2);
   IVector y(4);
-  X << 0, 1, 0, 1, 1, 0, 1, 1;
-  y << 0, 0, 1, 1;
+  X << 0, 1,
+       0, 1,
+       1, 0,
+       1, 1;
+  y << 0,
+       0,
+       1,
+       1;
 
   auto nb = MultinomialNaiveBayes(1.0);
   nb.fit(X, y);
