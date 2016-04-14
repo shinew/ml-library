@@ -17,6 +17,7 @@ TEST(MultinomialNaiveBayes, Basic) {
   auto X_test = IMatrix(1, 2);
   X_test << 1, 1;
   auto y_predict = nb.predict(X_test);
-  std::cout << y_predict << '\n';
+  EXPECT_DOUBLE_EQ(1.0 / 3, y_predict(0));
+  EXPECT_DOUBLE_EQ(2.0 / 3, y_predict(1));
 }
 }

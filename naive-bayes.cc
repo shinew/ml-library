@@ -56,8 +56,6 @@ void MultinomialNaiveBayes::fit(const Ref<const IMatrix> &X,
   }
 
   // normalize each class -> probability
-  //_theta_y = _theta_y + Vector::Ones(num_classes) * _alpha) /
-  //(m + _alpha * num_classes);
   _theta_y /= m;
 }
 
