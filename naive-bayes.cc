@@ -1,7 +1,6 @@
 #include "naive-bayes.h"
 
 #include <algorithm>
-#include <iostream>
 
 namespace ml {
 
