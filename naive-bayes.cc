@@ -3,7 +3,6 @@
 #include <algorithm>
 
 namespace ml {
-
 namespace {
 
 // Assumes that y is a vector with elements 0 .. n.
